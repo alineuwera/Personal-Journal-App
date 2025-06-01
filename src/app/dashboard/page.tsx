@@ -99,7 +99,7 @@ export default function DashboardPage() {
               title={entry.title}
               createdAt={entry.createdAt}
               content={entry.content}
-              onDelete={handleDelete}
+              onDeleteAction={handleDelete}
             />
           ))}
         </div>
