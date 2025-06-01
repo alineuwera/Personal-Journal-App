@@ -1,45 +1,15 @@
-// pages/api/entries/[id].ts
-import type { NextApiRequest, NextApiResponse } from "next";
-import admin from "firebase-admin";
+import { NextRequest, NextResponse } from "next/server";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "@/app/lib/firebase";
 
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
-  });
-}
-
-const db = admin.firestore();
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {
-    query: { id },
-    method,
-  } = req;
-
-  const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({ error: "Unauthorized" });
-  const token = authHeader.split(" ")[1];
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  const id = params.id;
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(token);
-    const uid = decodedToken.uid;
-
-    if (method === "DELETE") {
-      const docRef = db.collection("entries").doc(id as string);
-      const docSnap = await docRef.get();
-
-      if (!docSnap.exists) return res.status(404).json({ error: "Entry not found" });
-
-      if (docSnap.data()?.uid !== uid) return res.status(403).json({ error: "Forbidden" });
-
-      await docRef.delete();
-
-      return res.status(204).end();
-    }
-
-    res.setHeader("Allow", ["DELETE"]);
-    res.status(405).end(`Method ${method} Not Allowed`);
+    await deleteDoc(doc(db, "entries", id));
+    return NextResponse.json({ message: "Entry deleted successfully" }, { status: 200 });
   } catch (error) {
-    return res.status(401).json({ error: "Invalid or expired token" });
+    console.error("Failed to delete entry:", error);
+    return NextResponse.json({ message: "Failed to delete entry", error }, { status: 500 });
   }
 }

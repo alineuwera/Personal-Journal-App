@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import EntryForm from "@/app/components/EntryForm";
-import EntryCard from "@/app/components/EntryCard";
+import EntryList from "@/app/components/EntryList";
 import { auth } from "../lib/firebase";
 
 type Entry = {
@@ -37,9 +37,27 @@ export default function DashboardPage() {
     fetchEntries();
   }, [userUid]);
 
+  // delete handler
+    // delete handler with confirmation
+  async function handleDelete(id: string) {
+    const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
+    if (!confirmDelete) return;
+
+    const res = await fetch(`/api/entries/${id}`, {
+      method: "DELETE",
+    });
+
+    if (res.ok) {
+      fetchEntries();
+    } else {
+      alert("Failed to delete entry.");
+    }
+  }
+
+
   return (
     <div className="max-w-5xl mx-auto py-10 px-6">
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-20 bg-white p-6 rounded shadow">
         <h1 className="text-3xl font-bold text-gray-800">Personal Journal</h1>
         <button
           onClick={() => signOut(auth)}
@@ -49,15 +67,17 @@ export default function DashboardPage() {
         </button>
       </div>
 
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-700">My Journal</h2>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          className="bg-gray-800 text-white flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-900"
-        >
-          <span>➕</span> New Entry
-        </button>
-      </div>
+      {!showForm && (
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-semibold text-gray-700">My Journal</h2>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-gray-800 text-white flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-900"
+          >
+            <span>➕</span> New Entry
+          </button>
+        </div>
+      )}
 
       {showForm && (
         <div className="mb-8">
@@ -70,16 +90,20 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="grid md:grid-cols-2 gap-6">
-        {entries.map((entry) => (
-          <EntryCard
-            key={entry.id}
-            title={entry.title}
-            content={entry.content}
-            createdAt={entry.createdAt}
-          />
-        ))}
-      </div>
+      {!showForm && (
+        <div className="grid md:grid-cols-2 gap-6">
+          {entries.map((entry) => (
+            <EntryList
+              key={entry.id}
+              id={entry.id}
+              title={entry.title}
+              createdAt={entry.createdAt}
+              content={entry.content}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
