@@ -57,7 +57,7 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto py-10 px-6">
-      <div className="flex justify-between items-center mb-20 bg-white p-6 rounded shadow">
+      <div className="flex justify-around items-center mb-20 bg-white p-6 rounded shadow fixed top-0 left-0 right-0 z-10">
         <h1 className="text-3xl font-bold text-gray-800">Personal Journal</h1>
         <button
           onClick={() => signOut(auth)}
@@ -68,11 +68,11 @@ export default function DashboardPage() {
       </div>
 
       {!showForm && (
-        <div className="flex justify-between items-center mb-6">
+        <div className="flex justify-between items-center mb-6 mt-20">
           <h2 className="text-2xl font-semibold text-gray-700">My Journal</h2>
           <button
             onClick={() => setShowForm(true)}
-            className="bg-gray-800 text-white flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-900"
+            className="bg-gray-800 text-white flex items-center gap-2 px-4 py-2 rounded hover:bg-gray-900 font-semibold"
           >
             <span>➕</span> New Entry
           </button>

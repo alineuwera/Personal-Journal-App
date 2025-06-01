@@ -29,7 +29,7 @@ export default function EntryForm({ onAddAction }: { onAddAction: () => void }) 
   };
 
   return (
-    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow">
+    <form onSubmit={handleSubmit} className="bg-white p-6 rounded shadow mt-20">
       <h2 className="text-xl font-semibold mb-4">New Journal Entry</h2>
 
       <div className="mb-4">
