@@ -1,14 +1,9 @@
 "use client";
 
-import {
-  GoogleAuthProvider,
-  signInWithPopup,
-  signInWithEmailAndPassword,
-
-} from "firebase/auth";
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { auth } from "../lib/firebase";
 import { useState } from "react";
+import { auth } from "../lib/firebase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,7 +24,7 @@ export default function LoginPage() {
   };
 
   // Email/Password Sign-In
-  const handleEmailLogin = async (e:any) => {
+  const handleEmailLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
     try {
@@ -41,55 +36,51 @@ export default function LoginPage() {
     }
   };
 
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center space-y-6 p-6">
-    
+    <div className="min-h-screen flex flex-col items-center justify-center space-y-6 p-6 bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md space-y-6">
+        <div>
+          <h2 className="font-bold text-2xl mb-3 text-center">Sign in</h2>
+          <p className="text-gray-500">
+            Enter your email and password to access your Journal.
+          </p>
+        </div>
 
-      <div>
-        <h2 className="font-bold text-2xl mb-3 ">Sign in</h2>
-        <p>Enter your email and password to access your Journal.</p>
-      </div>
+        <form onSubmit={handleEmailLogin} className="flex flex-col space-y-4">
+          <input
+            type="email"
+            placeholder="your.email@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="border border-gray-300 p-3 rounded"
+          />
 
-      {/* Email/Password Form */}
-      <form className="flex flex-col space-y-4 w-full max-w-sm">
-        <input
-          type="email"
-          placeholder="your.email@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          className="border border-gray-300 p-3 rounded"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          className="border border-gray-300 p-3 rounded"
-        />
+          {error && <p className="text-red-500">{error}</p>}
 
-        {/* Error Message */}
-        {error && <p className="text-red-500">{error}</p>}
+          <button
+            type="submit"
+            className="bg-black text-white py-2 px-6 rounded-md"
+          >
+            Sign in
+          </button>
+        </form>
 
-        {/* Login Button */}
         <button
-          onClick={handleEmailLogin}
-          className="bg-black text-white py-2 px-6 rounded-md "
+          onClick={handleGoogleLogin}
+          className="bg-green-400 text-white py-3 px-6 rounded-md text-lg w-full"
         >
-          Sign in
+          Sign in with Google
         </button>
-
-          {/* Google Sign-In */}
-      <button
-        onClick={handleGoogleLogin}
-        className="bg-black text-white py-3 px-6 rounded-md text-lg"
-      >
-        Sign in with Google
-      </button>
-
-      </form>
+      </div>
     </div>
   );
 }
