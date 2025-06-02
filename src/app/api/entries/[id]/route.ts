@@ -1,3 +1,4 @@
+// src/app/api/entries/[id]/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { doc, deleteDoc } from "firebase/firestore";
 import { db } from "@/app/lib/firebase";
