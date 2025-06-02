@@ -12,6 +12,7 @@ export async function verifyIdToken(idToken: string) {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     return decodedToken;
   } catch (error) {
-    return null;
+    console.log("Error verifying ID token:", error);
+    
   }
 }

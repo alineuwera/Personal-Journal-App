@@ -35,7 +35,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     fetchEntries();
-  }, [userUid]);
+  }, [fetchEntries]);
 
   // delete handler
     // delete handler with confirmation
